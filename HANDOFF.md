@@ -1,22 +1,24 @@
 # Handoff — CatMatch
 
-## Sesión inicial — 2026-06-23
+## Sesión — 2026-06-23 (MVP del reconocimiento)
 
 ### Qué hemos hecho
-- Conectado el repo a GitHub (`github.com/julioalbertoo/catmatch`)
-- Montado el stack base (igual que buythedip): Next.js 14 (App Router) + React 18 + TypeScript + Tailwind 3 + Supabase + Mixpanel
-- Creados CLAUDE.md, BACKLOG.md, CHANGELOG.md, skills y commands (`.claude/`)
-- Definido el MVP (3 features) y el modelo de datos previsto
+- Construido el MVP completo (foto → huella → match → ficha), v0.2.0:
+  - **Inferencia** (`inference/`): HF Space con FastAPI, YOLOv8n + MegaDescriptor-L-384 (embedding 1536-d).
+  - **Supabase**: `cats` + `cat_photos` (pgvector, índice HNSW), RPC `match_cats` con filtro GPS, bucket Storage `cat-photos`, RLS anon (DB compartida).
+  - **App** (Next.js): pantalla Cámara (3 pasos + GPS), Resultado (registrado / ¿es este? / nuevo + score visible), Ficha (ver/editar/añadir foto). Rutas API `/api/match` y `/api/cats*`.
+- Build de producción OK.
 
 ### Estado actual
-🟢 Estructura del proyecto y stack definidos
-🟡 Falta `npm install` y conectar Supabase (env vars)
-🔴 MVP sin implementar
+🟢 Código del MVP terminado y compilando · pusheado a main (deploy auto en Vercel)
+🔴 **BLOQUEANTE para probar:** falta desplegar el HF Space y configurar `HF_SPACE_URL` (local y en Vercel). Sin eso, `/api/match` falla.
 
 ### Próximo paso
-Ejecutar `npm install`, crear el proyecto Supabase y rellenar `.env.local`, luego empezar la feature 1 del MVP (capturar gato + GPS).
+1. Crear el HF Space gratis (ver `inference/README.md`) y copiar su URL.
+2. Poner `HF_SPACE_URL` en `.env.local` y en Vercel (Settings → Environment Variables) → redeploy.
+3. Prueba end-to-end: foto de un gato → "nuevo" → crear ficha; segunda foto del mismo gato → debe reconocerlo; anotar scores y **calibrar umbrales** en `lib/match-thresholds.ts`.
 
 ### Decisiones tomadas que no deben revertirse
-- Stack fijo: Next.js + Supabase (+ pgvector) + Tailwind + Mixpanel + GitHub + Vercel
-- MVP limitado a 3 features — nada más en v1
-- Ubicaciones GPS de los gatos siempre privadas (RLS)
+- MVP sin login (DB de gatos compartida); privacidad GPS por RLS → BACKLOG.
+- IA en HF Space CPU gratis (cold start ~1 min asumido).
+- Embedding 1536-d (MegaDescriptor-L-384). Umbrales coseno provisionales: 0.6 registrado / 0.45 ¿es este?.

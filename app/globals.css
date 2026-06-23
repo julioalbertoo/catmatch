@@ -20,3 +20,12 @@ body {
 * {
   box-sizing: border-box;
 }
+
+@layer components {
+  .btn-primary {
+    @apply rounded-pill bg-cat-dark px-5 py-3 font-semibold text-white transition active:scale-95 disabled:opacity-50;
+  }
+  .btn-secondary {
+    @apply rounded-pill border border-cat-border bg-cat-surface px-5 py-3 font-semibold text-cat-text transition active:scale-95 disabled:opacity-50;
+  }
+}

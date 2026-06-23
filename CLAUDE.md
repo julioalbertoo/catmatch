@@ -19,12 +19,27 @@ App para reconocer gatos callejeros por una foto. Fotografías un gato y te dice
 
 **Núcleo en una frase:** foto → ¿este gato ya existe por aquí, sí o no?
 
-## MVP (3 features — nada más en v1)
-1. **Capturar gato** — hacer/subir foto + capturar GPS del momento.
-2. **¿Existe o es nuevo?** — generar la huella de la foto y compararla SOLO con los gatos de la misma zona; devolver la mejor coincidencia (con su nombre, estado de castración y notas) o "parece nuevo". La IA sugiere, el usuario confirma.
-3. **Registrar / actualizar ficha** — si es nuevo: nombre, castrado (auto-marcado si tiene la oreja cortada), notas. Si ya existe: ver y editar su ficha.
+## MVP — la pregunta que debe responder
+**Una sola:** ¿el reconocimiento por foto acierta lo suficiente como para ser útil?
+Todo lo que no ayude a contestar eso, fuera. Si esto funciona, lo demás se añade luego.
 
-Cualquier cosa fuera de estas 3 va al BACKLOG.md.
+### Pantallas (solo 3)
+1. **Cámara** — botón grande para hacer foto. Pide ubicación (GPS) en silencio por detrás.
+2. **Resultado** — según el parecido:
+   - "Ya registrado: es Michi" → muestra su ficha. Confirmas: sí / no.
+   - "Gato nuevo" → botón para crearle ficha.
+   - (Si duda) "¿Es Michi?" → sí / no.
+3. **Ficha del gato** — foto, nombre, castrado (sí / no / no sé), notas. Botón "añadir otra foto" (mejora el reconocimiento con el tiempo).
+
+Una lista simple de "mis gatos" es **opcional**. Cualquier otra cosa va al BACKLOG.md.
+
+### Flujo técnico (qué pasa por dentro)
+Analogía: como escanear un código de barras, pero la "etiqueta" es la cara del gato.
+1. **YOLO** recorta al gato (quita el fondo).
+2. **MegaDescriptor** convierte la foto en una huella de números (embedding).
+3. **Supabase + pgvector** busca el gato más parecido, filtrando por cercanía GPS.
+4. Según el parecido → ya registrado / ¿es este? / nuevo.
+5. Confirmas tú, y la foto se suma a su ficha (re-entrena el reconocimiento de ese gato).
 
 ## Flujo de trabajo
 - Siempre leer HANDOFF.md al inicio de cada sesión
