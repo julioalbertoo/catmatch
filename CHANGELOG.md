@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.2 — 2026-06-23
+**commit:** `TBD`
+- fix: bloquear crear ficha cuando la IA no detecta gato en la foto. La pantalla de Resultado muestra ahora un estado dedicado ("No hemos detectado ningún gato") con botón grande "Hacer otra foto", sin opciones de confirmar/crear ficha (evita huellas basura).
+
+---
+
 ## v0.2.1 — 2026-06-23
 **commit:** `TBD`
 - chore: MVP verificado en producción (Vercel) tras añadir las env vars de Supabase + HF_SPACE_URL. El reconocimiento funciona end-to-end. Cierre de sesión.

@@ -38,6 +38,30 @@ export default function MatchResult({
   const pct = data.similarity !== null ? Math.round(data.similarity * 100) : null
   const c = data.candidate
 
+  // Sin gato en la foto: no dejamos crear ficha (ensuciaría las huellas).
+  // Solo ofrecemos repetir la foto con un botón grande.
+  if (!data.detected) {
+    return (
+      <div className="flex w-full max-w-xs flex-col items-center gap-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={previewUrl}
+          alt="Foto del gato"
+          className="aspect-square w-full rounded-card object-cover opacity-70"
+        />
+        <h2 className="font-display text-xl font-bold text-center">
+          No hemos detectado ningún gato
+        </h2>
+        <p className="text-center text-sm text-cat-muted">
+          Asegúrate de que el gato se vea bien en la foto y vuelve a intentarlo.
+        </p>
+        <button className="btn-primary w-full" disabled={busy} onClick={onRetry}>
+          Hacer otra foto
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="flex w-full max-w-xs flex-col items-center gap-4">
       {/* eslint-disable-next-line @next/next/no-img-element */}
