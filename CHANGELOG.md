@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.1 — 2026-06-23
+**commit:** `TBD`
+- chore: MVP verificado en producción (Vercel) tras añadir las env vars de Supabase + HF_SPACE_URL. El reconocimiento funciona end-to-end. Cierre de sesión.
+
+---
+
 ## v0.2.0 — 2026-06-23
 **commit:** `TBD`
 - feat: MVP del reconocimiento foto→huella→match
