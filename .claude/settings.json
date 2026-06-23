@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git :*)",
+      "Bash(npm :*)",
+      "Bash(node -e :*)",
+      "Bash(vercel :*)",
+      "Bash(curl -s :*)",
+      "Bash(pkill -f :*)",
+      "Bash(npx :*)",
+      "Bash(grep :*)",
+      "Bash(ls :*)",
+      "Bash(wc -l :*)",
+      "WebSearch",
+      "WebFetch(domain:*)",
+      "Skill(update-config:*)"
+    ],
+    "defaultMode": "plan",
+    "additionalDirectories": [
+      "/private/tmp",
+      "/Users/julio/.claude",
+      "/tmp"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c \"import json; content = open('/Users/julio/catmatch/catmatch/HANDOFF.md').read(); print(json.dumps({'hookSpecificOutput': {'hookEventName': 'SessionStart', 'additionalContext': 'HANDOFF.md (lee esto y úsalo como contexto de sesión):\\n' + content}}))\""
+          }
+        ]
+      }
+    ]
+  }
+}

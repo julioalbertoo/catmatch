@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-cat-bg:      #fafaf7;
+  --color-cat-dark:    #191c1f;
+  --color-cat-surface: #ffffff;
+  --color-cat-text:    #191c1f;
+  --color-cat-muted:   #6b7280;
+  --color-cat-border:  #e5e7eb;
+}
+
+html,
+body {
+  background: var(--color-cat-bg);
+  color: var(--color-cat-text);
+}
+
+* {
+  box-sizing: border-box;
+}
