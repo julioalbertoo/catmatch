@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.3 — 2026-06-23
+**commit:** `TBD`
+- docs: cierre de sesión (HANDOFF). Sin cambios de código.
+
+---
+
 ## v0.2.2 — 2026-06-23
 **commit:** `TBD`
 - fix: bloquear crear ficha cuando la IA no detecta gato en la foto. La pantalla de Resultado muestra ahora un estado dedicado ("No hemos detectado ningún gato") con botón grande "Hacer otra foto", sin opciones de confirmar/crear ficha (evita huellas basura).

@@ -1,23 +1,35 @@
 # Handoff — CatMatch
 
-## Sesión — 2026-06-23 (MVP del reconocimiento — EN PRODUCCIÓN)
+## Sesión — 2026-06-23 (Bloquear ficha sin gato — EN PRODUCCIÓN)
 
 ### Qué hemos hecho
-- Construido y desplegado el MVP completo (foto → huella → match → ficha):
-  - **Inferencia** (`inference/`): HF Space `https://julioalbertoo-catmatch-inference.hf.space` — FastAPI con YOLOv8n + MegaDescriptor-L-384 (embedding 1536-d).
-  - **Supabase**: `cats` + `cat_photos` (pgvector, índice HNSW), RPC `match_cats` con filtro GPS, bucket Storage `cat-photos`, RLS anon (DB compartida).
-  - **App** (Next.js): Cámara (3 pasos + GPS), Resultado (registrado / ¿es este? / nuevo + score visible), Ficha (ver/editar/añadir foto). APIs `/api/match` y `/api/cats*`.
-- Verificado e2e: mismo gato → 100% "registrado"; gato distinto → 13% "nuevo"; filtro GPS excluye gatos lejanos.
-- Resuelto el fallo de deploy en Vercel: faltaban las env vars. Añadidas `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `HF_SPACE_URL`.
+- **Bloqueado crear ficha cuando la IA no detecta gato** (`detected === false`).
+  En `components/MatchResult.tsx` se añadió una rama temprana: si no hay gato, la
+  pantalla de Resultado muestra un estado dedicado ("No hemos detectado ningún gato")
+  con un **botón grande "Hacer otra foto"** (→ `onRetry`), sin opciones de
+  confirmar/crear. Evita guardar huellas basura de fotos sin gato.
+- Subida de versión a **v0.2.2** + entrada en CHANGELOG.
+- Verificado `tsc --noEmit` (exit 0). `npm run lint`/`build` fallan solo por el
+  entorno (ESLint desactualizado y env vars de Supabase ausentes), no por el cambio.
 
 ### Estado actual
-🟢 **MVP en producción y funcionando** en https://catmatch-one.vercel.app (v0.2.1).
-🟢 HF Space, Supabase y Vercel conectados; env vars configuradas en los 3 sitios.
+🟢 **v0.2.2 en producción** en https://catmatch-one.vercel.app (deploy `dpl_2nxd2j…`,
+   target production, READY).
+🟡 Falta la **prueba manual** en móvil: foto sin gato → debe verse el nuevo estado +
+   botón grande; foto con gato → flujo normal (registered/maybe/new) intacto.
+🔴 Calibrar umbrales en `lib/match-thresholds.ts` (0.6 registrado / 0.45 ¿es este?)
+   con scores reales de gatos de la calle (pendiente de sesiones previas).
 
 ### Próximo paso
-- Probar en el móvil con gatos reales de la calle y **calibrar umbrales** en `lib/match-thresholds.ts` (ahora 0.6 registrado / 0.45 ¿es este?) con los scores observados.
-- Tener en cuenta el cold start del Space gratis (~30-60s la 1ª foto tras inactividad).
+- Probar en el móvil una foto **sin gato** y confirmar que aparece "No hemos detectado
+  ningún gato" + botón grande, sin opción de crear ficha.
 
 ### Decisiones tomadas que no deben revertirse
-- MVP sin login (DB de gatos compartida); privacidad GPS por RLS → BACKLOG.
-- IA en HF Space CPU gratis. Embedding 1536-d (MegaDescriptor-L-384).
+- El bloqueo es solo de cliente (UI): el flag `detected` ya viaja
+  `lib/embed.ts` → `/api/match` → `MatchResult`; basta enforzarlo en la pantalla.
+- Cuidado al desplegar: subir el **mismo SHA** a la rama y luego a `main` hace que
+  Vercel lo dedupe y solo lo despliegue como *preview*. Subir directo a `main` (o un
+  commit nuevo) para que vaya a producción.
+- Los commits salen sin firma GPG/SSH (badge "Unverified") pero con autor correcto
+  `Claude <noreply@anthropic.com>`; se decidió **no** reescribir historia de `main`
+  por un aviso cosmético.
