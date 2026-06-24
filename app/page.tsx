@@ -194,6 +194,10 @@ export default function Home() {
             />
           )}
           <CatForm submitLabel="Crear gato" busy={busy} onSubmit={createNew} />
+          <p className="max-w-xs text-center text-xs text-cat-muted">
+            📍 La ubicación de este gato se guarda en privado para protegerlo:
+            nunca se muestra públicamente.
+          </p>
           <button className="text-sm text-cat-muted underline" onClick={reset}>
             Cancelar
           </button>

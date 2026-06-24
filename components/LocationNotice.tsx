@@ -29,7 +29,8 @@ export default function LocationNotice() {
   return (
     <p className="w-full max-w-xs rounded-card bg-cat-surface px-4 py-2 text-center text-sm text-cat-muted">
       📍 Te pediremos tu ubicación para identificar al gato con más fiabilidad:
-      solo lo comparamos con gatos de tu zona.
+      solo lo comparamos con gatos de tu zona. Tu ubicación se guarda en privado
+      y nunca se muestra públicamente, para proteger al gato.
     </p>
   )
 }
