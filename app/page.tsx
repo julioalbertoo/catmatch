@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CameraCapture from '@/components/CameraCapture'
+import LocationNotice from '@/components/LocationNotice'
 import MatchResult, { type MatchData } from '@/components/MatchResult'
 import CatForm, { type CatFormValues } from '@/components/CatForm'
 import { getPosition, type Coords } from '@/lib/geo'
@@ -147,6 +148,7 @@ export default function Home() {
           <p className="text-center text-cat-muted">
             Fotografía un gato callejero para saber si ya está registrado por la zona.
           </p>
+          <LocationNotice />
           <CameraCapture onCapture={handleCapture} />
         </>
       )}
