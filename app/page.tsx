@@ -7,6 +7,8 @@ import LocationNotice from '@/components/LocationNotice'
 import MatchResult, { type MatchData } from '@/components/MatchResult'
 import CatForm, { type CatFormValues } from '@/components/CatForm'
 import { getPosition, type Coords } from '@/lib/geo'
+import { detectCatColor } from '@/lib/cat-color'
+import { suggestCatName } from '@/lib/cat-names'
 import { VERSION } from '@/lib/version'
 
 type Step = 'camera' | 'analyzing' | 'result' | 'form'
@@ -25,6 +27,7 @@ export default function Home() {
   const coordsRef = useRef<Coords | null>(null)
   const matchRef = useRef<MatchResponse | null>(null)
   const [previewUrl, setPreviewUrl] = useState('')
+  const [suggestedName, setSuggestedName] = useState('')
 
   const reset = useCallback(() => {
     if (previewUrl) URL.revokeObjectURL(previewUrl)
@@ -32,6 +35,7 @@ export default function Home() {
     coordsRef.current = null
     matchRef.current = null
     setPreviewUrl('')
+    setSuggestedName('')
     setError(null)
     setStep('camera')
   }, [previewUrl])
@@ -42,6 +46,11 @@ export default function Home() {
     const url = URL.createObjectURL(file)
     setPreviewUrl(url)
     setStep('analyzing')
+
+    // En paralelo (no bloquea el match): proponemos un nombre según el color.
+    detectCatColor(file)
+      .then((color) => setSuggestedName(suggestCatName(color)))
+      .catch(() => setSuggestedName(''))
 
     try {
       const coords = await getPosition()
@@ -193,7 +202,18 @@ export default function Home() {
               className="aspect-square w-40 rounded-card object-cover"
             />
           )}
-          <CatForm submitLabel="Crear gato" busy={busy} onSubmit={createNew} />
+          <CatForm
+            submitLabel="Crear gato"
+            busy={busy}
+            suggestedName={suggestedName}
+            onSubmit={createNew}
+          />
+          {suggestedName && (
+            <p className="max-w-xs text-center text-xs text-cat-muted">
+              💡 Te proponemos <strong>{suggestedName}</strong> por su color. Escribe otro si
+              no te gusta.
+            </p>
+          )}
           <p className="max-w-xs text-center text-xs text-cat-muted">
             📍 La ubicación de este gato se guarda en privado para protegerlo:
             nunca se muestra públicamente.
