@@ -7,6 +7,7 @@ import LocationNotice from '@/components/LocationNotice'
 import MatchResult, { type MatchData } from '@/components/MatchResult'
 import CatForm, { type CatFormValues } from '@/components/CatForm'
 import { getPosition, type Coords } from '@/lib/geo'
+import { normalizeImage } from '@/lib/image'
 import { detectCatColor } from '@/lib/cat-color'
 import { suggestCatName } from '@/lib/cat-names'
 import { VERSION } from '@/lib/version'
@@ -40,12 +41,16 @@ export default function Home() {
     setStep('camera')
   }, [previewUrl])
 
-  const handleCapture = useCallback(async (file: File) => {
+  const handleCapture = useCallback(async (original: File) => {
     setError(null)
+    setStep('analyzing')
+
+    // Normaliza en el móvil (HEIC/grande → JPEG pequeño) antes de subir.
+    // Se reutiliza para el match y para guardar la ficha (fileRef).
+    const file = await normalizeImage(original)
     fileRef.current = file
     const url = URL.createObjectURL(file)
     setPreviewUrl(url)
-    setStep('analyzing')
 
     // En paralelo (no bloquea el match): proponemos un nombre según el color.
     detectCatColor(file)

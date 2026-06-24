@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.13 — 2026-06-24
+**commit:** `TBD`
+- fix: corregir el error "The string did not match the expected pattern" al subir una foto desde iPhone. Las fotos del iPhone son HEIC y grandes; ahora se normalizan en el propio móvil (decodificar → reescalar a máx. 1600 px → re-codificar a JPEG, respetando la orientación EXIF) antes de subirlas (`lib/image.ts`, integrado en `app/page.tsx`). La imagen normalizada se reutiliza para el match y para guardar la ficha. Sin cambios en APIs ni base de datos.
+
+---
+
 ## v0.2.12 — 2026-06-24
 **commit:** `TBD`
 - feat: permitir subir una foto de la galería además de hacerla con la cámara. El botón grande "Hacer foto" sigue abriendo la cámara en móvil; debajo, un enlace discreto ("o subir una foto") usa un input sin `capture` para abrir la galería (`components/CameraCapture.tsx`). Ambos comparten el mismo flujo de análisis.
