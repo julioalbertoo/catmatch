@@ -19,14 +19,13 @@
 - v0.2.13 + entrada en CHANGELOG. `npx tsc --noEmit` pasa limpio.
 
 ### Estado actual
-🟡 **v0.2.13 en la rama `claude/mobile-photo-upload-error-lztut9`** (pusheada, **no** mergeada
-   a `main` todavía — se trabajó en rama de feature, no en `main`).
+🟢 **v0.2.13 en producción** (mergeada a `main` con merge commit `--no-ff` para forzar deploy
+   nuevo en Vercel — merge commit `33a5818`).
 🔴 Sin verificar en iPhone real: que al elegir una foto HEIC ya **no** salga el error y que el
    análisis devuelva resultado. Validar también una foto en horizontal (orientación EXIF).
 
 ### Próximo paso
-- Verificar en iPhone real. Si OK, mergear `claude/mobile-photo-upload-error-lztut9` a `main`
-  para desplegar en producción (Vercel).
+- Verificar en iPhone real (foto de galería + foto en horizontal). Si OK, cerrado.
 
 ### Decisiones tomadas que no deben revertirse
 - La normalización va **en el cliente** (no en el servidor): evita el límite de 4.5 MB de
