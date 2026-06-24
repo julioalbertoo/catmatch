@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.9 — 2026-06-24
+**commit:** `TBD`
+- docs: cierre de sesión (HANDOFF) + push de v0.2.8 a producción. Sin cambios de código.
+
+---
+
 ## v0.2.8 — 2026-06-24
 **commit:** `TBD`
 - ui: mensaje de privacidad de ubicación en dos momentos. Al pedir el permiso GPS (`components/LocationNotice.tsx`) se aclara que la ubicación se guarda en privado y nunca se muestra públicamente, para proteger al gato. Al registrar un gato nuevo ("Nueva ficha" en `app/page.tsx`) se añade la misma nota de tranquilidad. Solo copy, sin cambios de lógica.
