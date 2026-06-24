@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.5 — 2026-06-24
+**commit:** `TBD`
+- docs: cierre de sesión (HANDOFF). Sin cambios de código.
+
+---
+
 ## v0.2.4 — 2026-06-24
 **commit:** `TBD`
 - ui: reducir el espacio entre el pie con la versión y el botón "Hacer foto" (quitado `mt-auto` del footer en la pantalla principal).
