@@ -14,8 +14,8 @@
 - v0.2.12 + entrada en CHANGELOG. `npx tsc --noEmit` pasa limpio.
 
 ### Estado actual
-🟡 **v0.2.12 pusheada al branch `claude/photo-upload-option-73byew`** (NO a `main`). Pendiente
-   de merge/deploy según decida el usuario.
+🟢 **v0.2.12 en producción** (mergeada a `main` con merge commit `--no-ff` para forzar deploy
+   nuevo en Vercel y no deduparlo como *preview*).
 🔴 Sin verificar en móvil: que el botón grande abra la cámara y el enlace discreto abra la
    galería, y que al elegir una imagen arranque el análisis igual que con la cámara.
 ⚠️ `npm run lint` falla por incompatibilidad de opciones de `next lint` con la versión de
