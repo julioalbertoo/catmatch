@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.12 — 2026-06-24
+**commit:** `TBD`
+- feat: permitir subir una foto de la galería además de hacerla con la cámara. El botón grande "Hacer foto" sigue abriendo la cámara en móvil; debajo, un enlace discreto ("o subir una foto") usa un input sin `capture` para abrir la galería (`components/CameraCapture.tsx`). Ambos comparten el mismo flujo de análisis.
+
+---
+
 ## v0.2.11 — 2026-06-24
 **commit:** `TBD`
 - chore: redeploy a producción de la sugerencia de nombre por color (v0.2.10) + cierre de sesión. Sin cambios de código.
