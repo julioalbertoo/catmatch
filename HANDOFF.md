@@ -1,6 +1,6 @@
 # Handoff — CatMatch
 
-## Sesión — 2026-06-24 (Sugerencia de nombre por color — en rama, SIN desplegar)
+## Sesión — 2026-06-24 (Sugerencia de nombre por color — EN PRODUCCIÓN)
 
 ### Qué hemos hecho
 - **Sugerencia de nombre de gato según su color** en la pantalla "Nueva ficha" (fuera del
@@ -17,17 +17,15 @@
 - v0.2.10 + entrada en CHANGELOG. `tsc --noEmit` pasa limpio.
 
 ### Estado actual
-🟡 **v0.2.10 commiteada y pusheada a la rama `claude/cat-name-appearance-7rpwso`** —
-   NO está en `main` ni en producción todavía.
-🟢 No requiere tocar Hugging Face: todo corre en el cliente (Vercel). Por eso se eligió
-   esta opción frente a meter la detección de color en el Space (`inference/`).
+🟢 **v0.2.10/v0.2.11 en producción** (mergeado a `main` + commit de redeploy v0.2.11).
+   No requiere tocar Hugging Face: todo corre en el cliente (Vercel).
 🔴 Sin verificar en móvil: que el nombre sugerido aparece como placeholder, que se adopta
    al dejar el campo en blanco, y la calidad de la detección de color con fotos reales.
 
 ### Próximo paso
-- Decidir si se lleva a producción (merge a `main`) y verificar en el móvil.
-- Si la detección de color sobre la foto entera sesga demasiado por el fondo, valorar la
-  "Opción B" (descripción con modelo de visión) — implicaría tocar el Space.
+- Verificar en el móvil el placeholder de nombre y la calidad de la detección de color.
+- Si la detección sobre la foto entera sesga demasiado por el fondo, valorar la "Opción B"
+  (descripción con modelo de visión) — implicaría tocar el Space (`inference/`).
 
 ### Decisiones tomadas que no deben revertirse
 - La detección de color es **client-side a propósito** para no tocar Hugging Face. El Space

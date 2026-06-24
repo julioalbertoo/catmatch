@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.11 — 2026-06-24
+**commit:** `TBD`
+- chore: redeploy a producción de la sugerencia de nombre por color (v0.2.10) + cierre de sesión. Sin cambios de código.
+
+---
+
 ## v0.2.10 — 2026-06-24
 **commit:** `TBD`
 - feat: sugerencia de nombre por color del gato en "Nueva ficha". Al hacer la foto, el móvil detecta el color dominante en el navegador (Canvas API, sin Hugging Face ni coste por foto) y propone un nombre simpático (`lib/cat-color.ts` + `lib/cat-names.ts`). El nombre aparece como placeholder del campo Nombre y se adopta si el usuario lo deja en blanco; puede escribir otro. Limitación conocida: sin el recorte del Space, el color se mide sobre el centro de la foto (puede sesgar con el fondo).
@@ -54,9 +60,4 @@
 
 ---
 
-## v0.2.1 — 2026-06-23
-**commit:** `TBD`
-- chore: MVP verificado en producción (Vercel) tras añadir las env vars de Supabase + HF_SPACE_URL. El reconocimiento funciona end-to-end. Cierre de sesión.
-
----
 
