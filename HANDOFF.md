@@ -1,34 +1,38 @@
 # Handoff — CatMatch
 
-## Sesión — 2026-06-24 (Aviso de privacidad de ubicación — EN PRODUCCIÓN)
+## Sesión — 2026-06-24 (Sugerencia de nombre por color — en rama, SIN desplegar)
 
 ### Qué hemos hecho
-- **Mensaje de privacidad de la ubicación en dos momentos** (solo copy, sin tocar lógica):
-  1. **Al pedir el permiso GPS** (`components/LocationNotice.tsx`, estado `pending`): se
-     amplía el aviso de la cámara para aclarar que "Tu ubicación se guarda en privado y
-     nunca se muestra públicamente, para proteger al gato".
-  2. **Al registrar un gato nuevo** (pantalla "Nueva ficha" en `app/page.tsx`): nota breve
-     y discreta bajo el formulario con el mismo mensaje de tranquilidad.
-- La nota se colocó en `app/page.tsx` (no dentro de `CatForm.tsx`) a propósito, porque
-  `CatForm` se reutiliza para **editar** gatos existentes y ahí el aviso no aplica.
-- v0.2.8 (cambio de copy) → v0.2.9 (cierre de sesión). Entradas en CHANGELOG.
-- Pusheado a la rama de trabajo `claude/cat-location-privacy-messaging-2tgwbt` y a `main`.
+- **Sugerencia de nombre de gato según su color** en la pantalla "Nueva ficha" (fuera del
+  MVP, hecho a conciencia a petición del usuario):
+  - `lib/cat-color.ts`: detecta el color dominante del gato **en el navegador del móvil**
+    (Canvas API). Sin Hugging Face, sin coste por foto, sin dependencias nuevas. Muestrea
+    el **centro** de la foto para reducir el fondo (no tenemos el recorte limpio del Space).
+    Devuelve: naranja / negro / blanco / gris / marrón / varios.
+  - `lib/cat-names.ts`: listas de nombres simpáticos por color + `suggestCatName(color)`.
+  - `components/CatForm.tsx`: nuevo prop `suggestedName` → se muestra como **placeholder**
+    del campo Nombre y se **adopta si el usuario lo deja en blanco** (editable: escribe otro).
+  - `app/page.tsx`: al hacer la foto, calcula el color en paralelo (no bloquea el match) y
+    pasa el nombre sugerido al formulario, con una pista discreta ("💡 Te proponemos X…").
+- v0.2.10 + entrada en CHANGELOG. `tsc --noEmit` pasa limpio.
 
 ### Estado actual
-🟢 **v0.2.8/v0.2.9 en producción** (en `main`).
-🟡 Falta confirmar en móvil: que el aviso de privacidad aparece al pedir el permiso
-   (estado pendiente) y en la pantalla "Nueva ficha" al crear un gato; y que NO aparece
-   al editar un gato existente (`/cat/[id]`).
-🔴 Calibrar umbrales en `lib/match-thresholds.ts` (0.6 registrado / 0.45 ¿es este?) con
-   scores reales de gatos de la calle (pendiente de sesiones previas).
+🟡 **v0.2.10 commiteada y pusheada a la rama `claude/cat-name-appearance-7rpwso`** —
+   NO está en `main` ni en producción todavía.
+🟢 No requiere tocar Hugging Face: todo corre en el cliente (Vercel). Por eso se eligió
+   esta opción frente a meter la detección de color en el Space (`inference/`).
+🔴 Sin verificar en móvil: que el nombre sugerido aparece como placeholder, que se adopta
+   al dejar el campo en blanco, y la calidad de la detección de color con fotos reales.
 
 ### Próximo paso
-- Verificar en el móvil el copy de privacidad (permiso pendiente → "Nueva ficha" → editar).
+- Decidir si se lleva a producción (merge a `main`) y verificar en el móvil.
+- Si la detección de color sobre la foto entera sesga demasiado por el fondo, valorar la
+  "Opción B" (descripción con modelo de visión) — implicaría tocar el Space.
 
 ### Decisiones tomadas que no deben revertirse
+- La detección de color es **client-side a propósito** para no tocar Hugging Face. El Space
+  (`inference/`) no se actualiza desde GitHub: hay que subirlo a mano en huggingface.co.
+- El nombre va en el **placeholder** (no como valor pre-rellenado), pero se adopta como
+  nombre real si el campo se deja vacío — así "aceptar" no obliga a borrar nada.
 - Cuidado al desplegar: subir el **mismo SHA** a una rama y luego a `main` hace que Vercel
-  lo dedupe y solo lo despliegue como *preview*. Subir un **commit nuevo** a `main` (patrón
-  "cierre de sesión / redeploy") para que vaya a producción.
-- En este entorno `next lint` está roto (desajuste de versión de ESLint) y `npm run build`
-  falla al recolectar las rutas API por falta de env vars de Supabase: son limitaciones del
-  contenedor, no del código. La compilación de TypeScript sí pasa.
+  lo dedupe como *preview*. Subir un **commit nuevo** a `main` para que vaya a producción.
