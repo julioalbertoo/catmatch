@@ -1,5 +1,11 @@
 # Changelog — CatMatch
 
+## v0.2.7 — 2026-06-24
+**commit:** `TBD`
+- chore: redeploy a producción del aviso de ubicación (v0.2.6) + cierre de sesión. Sin cambios de código.
+
+---
+
 ## v0.2.6 — 2026-06-24
 **commit:** `TBD`
 - ui: aviso de ubicación en la pantalla de cámara. Aparece solo si el permiso GPS está pendiente ("Te pediremos tu ubicación para identificar al gato con más fiabilidad"), desaparece al concederlo y cambia a un mensaje suave si está denegado. Nuevo `components/LocationNotice.tsx` + helpers `getGeoPermission`/`watchGeoPermission` en `lib/geo.ts`.

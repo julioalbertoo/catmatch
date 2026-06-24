@@ -1,6 +1,6 @@
 {
   "name": "catmatch",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "private": true,
   "scripts": {
     "predev": "node scripts/generate-version.js",
