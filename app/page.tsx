@@ -198,7 +198,7 @@ export default function Home() {
         </>
       )}
 
-      <footer className="mt-auto pt-6 text-xs text-cat-muted">{VERSION}</footer>
+      <footer className="text-xs text-cat-muted">{VERSION}</footer>
     </main>
   )
 }
