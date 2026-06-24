@@ -1,31 +1,35 @@
 # Handoff — CatMatch
 
-## Sesión — 2026-06-24 (Subir foto de la galería — botón discreto)
+## Sesión — 2026-06-24 (Fix: subir foto desde iPhone fallaba)
 
 ### Qué hemos hecho
-- **Permitir subir una foto** además de hacerla con la cámara, con un botón muy discreto:
-  - `components/CameraCapture.tsx`: el botón grande "Hacer foto" mantiene `capture="environment"`
-    (en móvil abre la cámara). Debajo se añade un **enlace pequeño y discreto** ("o subir una
-    foto") con un segundo `<input type="file">` **sin** `capture` → en móvil abre la galería.
-  - Ambos inputs comparten el mismo `handleChange` → `onCapture(file)`, así que el flujo de
-    análisis/match/formulario **no cambia**. No se tocó `app/page.tsx` ni ninguna API.
-  - Estilo discreto reutilizando el patrón de acción secundaria (`text-sm text-cat-muted
-    underline`).
-- v0.2.12 + entrada en CHANGELOG. `npx tsc --noEmit` pasa limpio.
+- **Corregido el error "The string did not match the expected pattern"** que salía al subir
+  una foto desde iPhone en la pantalla "Analizando…". Causa raíz: la foto se enviaba **tal
+  cual** a `/api/match`. Las fotos de iPhone son **HEIC** (el pipeline asume JPEG) y **grandes**
+  (3–5 MB; Vercel rechaza cuerpos > ~4.5 MB).
+- **Nuevo `lib/image.ts` → `normalizeImage(file)`**: en el propio móvil decodifica
+  (`createImageBitmap` con `imageOrientation: 'from-image'`, con fallback a `<img>`), reescala a
+  máx. 1600 px de lado y re-codifica a **JPEG** (`canvas.toBlob`, calidad 0.85). Respeta la
+  orientación EXIF. Defensivo: ante cualquier fallo devuelve el archivo original (nunca lanza).
+- **`app/page.tsx` (`handleCapture`)**: normaliza la foto una sola vez al capturarla y reutiliza
+  el JPEG resultante para el match, la vista previa, la detección de color y para guardar la
+  ficha (`fileRef`). No se tocaron APIs ni base de datos (el contrato FormData no cambia).
+- Efecto colateral positivo de privacidad: el reescalado **elimina los metadatos EXIF** (incl.
+  GPS incrustado en la imagen). El GPS funcional se sigue tomando aparte vía `getPosition()`.
+- v0.2.13 + entrada en CHANGELOG. `npx tsc --noEmit` pasa limpio.
 
 ### Estado actual
-🟢 **v0.2.12 en producción** (mergeada a `main` con merge commit `--no-ff` para forzar deploy
-   nuevo en Vercel y no deduparlo como *preview*).
-🔴 Sin verificar en móvil: que el botón grande abra la cámara y el enlace discreto abra la
-   galería, y que al elegir una imagen arranque el análisis igual que con la cámara.
-⚠️ `npm run lint` falla por incompatibilidad de opciones de `next lint` con la versión de
-   ESLint instalada (pre-existente, no relacionado con este cambio). El check útil (`tsc`) está
-   verde.
+🟡 **v0.2.13 en la rama `claude/mobile-photo-upload-error-lztut9`** (pusheada, **no** mergeada
+   a `main` todavía — se trabajó en rama de feature, no en `main`).
+🔴 Sin verificar en iPhone real: que al elegir una foto HEIC ya **no** salga el error y que el
+   análisis devuelva resultado. Validar también una foto en horizontal (orientación EXIF).
 
 ### Próximo paso
-- Verificar en móvil real (cámara vs. galería) y, si OK, mergear a `main` para producción.
+- Verificar en iPhone real. Si OK, mergear `claude/mobile-photo-upload-error-lztut9` a `main`
+  para desplegar en producción (Vercel).
 
 ### Decisiones tomadas que no deben revertirse
-- Dos inputs separados a propósito: uno con `capture="environment"` (cámara) y otro sin
-  `capture` (galería). Es la única forma fiable de ofrecer ambas opciones en móvil.
-- El enlace de subir es deliberadamente discreto para no competir con el botón principal.
+- La normalización va **en el cliente** (no en el servidor): evita el límite de 4.5 MB de
+  Vercel en la subida y resuelve HEIC antes de que llegue al backend.
+- `normalizeImage` nunca lanza (devuelve el original ante fallo), igual que
+  `detectCatColor`/`getPosition`, para no romper el flujo en navegadores raros.
